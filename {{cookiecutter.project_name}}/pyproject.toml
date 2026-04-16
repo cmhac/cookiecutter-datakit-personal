@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "{{ cookiecutter.project_name }}"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "altair>=6.0.0",
+    "boto3>=1.40.0",
+    "httpx>=0.28.1",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.8",
+    "pandas>=3.0.2",
+    "pandera>=0.31.0",
+    "polars>=1.39.3",
+    "pyarrow>=23.0.1",
+    "quarto>=0.1.0",
+    "snakemake>=9.19.0",
+    "statsmodels>=0.14.6",
+    "truststore>=0.10.1",
+    "python-dotenv>=1.2.2",
+]
+
+[dependency-groups]
+dev = ["pre-commit>=4.5.1", "ruff>=0.15.10", "ty>=0.0.29"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "B",
+    "D",
+    "A",
+    "C4",
+    "UP",
+    "SIM",
+    "RET",
+    "PTH",
+    "DTZ",
+    "PL",
+]
+ignore = ["D212", "D203"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/ingest/_common.py" = ["E402"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scripts*"]

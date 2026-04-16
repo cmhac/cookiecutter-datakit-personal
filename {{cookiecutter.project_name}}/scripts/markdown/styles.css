@@ -1,0 +1,88 @@
+.libre-franklin-<uniquifier> {
+  font-family: "Libre Franklin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
+
+
+.quarto-title-block .quarto-title-banner {
+  position: relative;
+  padding-left: 120px;
+  background-image: none;
+}
+
+.quarto-title-block .quarto-title-banner::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100px;
+  height: 100px;
+  background-image: url(https://pbs.twimg.com/profile_images/1542992472531472384/PZNdRjWS_400x400.jpg);
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+
+.libre-franklin-<uniquifier> {
+  font-family: "Libre Franklin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
+
+font-family: "Libre Franklin", sans-serif;
+
+/* Header image with circular border */
+.header-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Header container styling */
+.quarto-title-block .header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+
+.footer {
+  background-color: #316691;
+  color: #fff;
+  font-family: 'Georgia', serif;
+  padding: 20px 0;
+  text-align: center;
+  border-top: 3px solid #000;
+  margin-top: 40px;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+.footer::before {
+  content: "(C) " attr(data-year) " ";
+  font-style: italic;
+  opacity: 0.8;
+}
+.footer::after {
+  content: " - Democracy Dies in Darkness";
+  font-size: 12px;
+  opacity: 0.7;
+}
+.footer #askadatajournalist {
+  color: silver;
+  font-weight: bold;
+}
+.footer #askadatajournalist:visited {
+  color: black;
+}

@@ -1,0 +1,211 @@
+---
+title: "Title"
+subtitle: "Subtitle"
+author: "Your Name"
+date: last-modified
+date-format: "MM-DD-YYYY"
+description: "Description goes here if you want"
+title-block-banner: "#316691"
+format:
+  html:
+      embed-resources: true
+      fontcolor: black
+      toc: true
+      toc-location: left
+      toc-title: Table of contents title
+      toc-depth: 2
+      code-fold: true
+      page-layout: full #comment out to make middle section narrower
+      header-includes: <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" type="text/css"/>
+css: styles.css
+mainfont: "Libre Franklin"
+include-after-body:
+  text: |
+    <footer class="footer" data-year="2025">Washington Post Data Team <span id="askadatajournalist"><a href="https://washpost.enterprise.slack.com/archives/C01QZ4RQ266">#ask-a-data-journalist</a></span></footer>
+
+---
+
+## Libraries
+
+```{python setup}
+#| echo: false
+#| warning: false
+#| message: false
+
+#pip install pandas tabulate
+
+import pandas as pd
+
+from tabulate import tabulate
+```
+
+# H1 title and normal table example
+
+```{python dummy}
+#| echo: true
+#| warning: false
+#| message: false
+
+# Read the CSV file
+df = pd.read_csv("https://github.com/washingtonpost/data-police-shootings/raw/master/v2/fatal-police-shootings-agencies.csv")
+
+# Slice the dataframe to get the first 5 rows
+df_sliced = df.iloc[:5]
+
+# Print the sliced dataframe as a formatted table
+print(tabulate(df_sliced, headers='keys', tablefmt='psql'))
+```
+
+
+## H2 title and datatable example
+
+
+```{python show}
+#pip install itables
+from itables import show
+
+show(df)
+```
+
+### H3 title and datatable buttons example
+
+Extra [options](https://quarto.org/docs/dashboards/data-display.html) for show tables
+
+```{python datatable_with_buttons}
+show(df, buttons = ['copy', 'excel', 'csv'])
+
+```
+
+
+# Tabs example
+
+This is a 1 # title
+
+::: {.panel-tabset}
+
+## Plot
+
+This is a 2 # title but doesn't show up in the table of contents
+
+```{python chart}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Assuming 'df' is already defined or read from a CSV file
+# For demonstration purposes, let's assume df is a DataFrame with columns 'state' and 'total_shootings'
+
+# Group by 'state' and summarize total_shootings
+state_shootings = df.groupby('state').agg({'total_shootings': 'sum'}).reset_index()
+
+# Sort by total_shootings in descending order and select the top 5 states
+state_shootings = state_shootings.sort_values(by='total_shootings', ascending=False).head(5)
+
+# Plot the data
+plt.barh(state_shootings['state'], state_shootings['total_shootings'])
+plt.xlabel('Total Shootings')
+plt.ylabel('State')
+plt.title('Shootings')
+plt.gca().invert_yaxis()  # Invert y-axis to have highest at the top
+plt.show()
+```
+
+## Data
+
+This is also a 2 # title but doesn't show up in the table of contents
+
+
+```{python data}
+show(state_shootings)
+```
+
+:::
+
+
+
+
+## Callout blocks
+
+Callouts are an excellent way to draw extra attention to certain concepts, or to more clearly indicate that certain content is supplemental or applicable to only some scenarios. Learn more [here](https://quarto.org/docs/authoring/callouts.html).
+
+::: {.callout-note}
+Note that there are five types of callouts, including:
+`note`, `warning`, `important`, `tip`, and `caution`. Check the template for code to implement Note, Tip, and Expand.
+:::
+
+::: {.callout-tip}
+## Tip with Title
+
+This is an example of a callout with a title.
+:::
+
+::: {.callout-caution collapse="true"}
+## Expand To Learn About Collapse
+
+This is an example of a 'folded' caution callout that can be expanded by the user. You can use `collapse="true"` to collapse it by default or `collapse="false"` to make a collapsible callout that is expanded by default.
+:::
+
+
+## Other customizations
+
+* How to embed [videos](https://quarto.org/docs/authoring/videos.html) and other [iframes](https://quarto.org/docs/authoring/notebook-embed.html)
+* Change the [layout](https://quarto.org/docs/authoring/article-layout.html) of the memo
+* Even more [documentation](https://quarto.org/docs/guide/)
+* Adding [images](https://stackoverflow.com/questions/41604263/how-do-i-display-local-image-in-markdowm)
+
+
+## Export outputs
+
+Send to s3 to share with newsroom colleagues
+
+You can make your analysis or other output files shareable at a link with newsroom colleagues.
+
+1. If you haven't already, authenticate by running `ne-okta` and following the two-step authentication prompts
+
+2. Activate the helpers that will allow you to use the command
+
+```
+source helpers.sh
+```
+
+3. Make sure all the files you want to share are in an `outputs/` directory at the root of your project
+   a. Example: `my-project/outputs/analysis.md`
+   b. You can put subdirectories in `outputs` that will also be written to s3 (e.g. `my-project/outputs/summary_files/summary.json`)
+
+4. Hop onto a branch that will be used in your s3 path.
+   a. If you already followed all the steps in this doc while on a branch called `outputs-for-climate-desk`, then your files will be at `https://washpost.arcpublishing.com/datakit/my-project/outputs-for-climate-desk/`
+   b. To overwrite those files, you should stay on the same branch.
+   c. To write a new set of files, switch to a new branch.
+
+5. Upload the contents of `outputs/` to s3:
+
+```
+outputs-push
+```
+
+You will see a message and prompt to decide if you want to continue with the operation. If there are already files at the s3 path, the message will warn you that you may be overwriting files like so:
+
+```
+This operation will write the following files to
+s3://data-reporting-datakit-output-v2-prod/{{ cookiecutter.project_name }}/{branch}/:
+
+{./outputs/filenames}
+
+There are already some files at this s3 path.
+Any s3 files below with the same name as the ones stored locally will be overwritten by this operation:
+
+2023-08-03 16:17:46          0 {{ cookiecutter.project_name }}/{branch}/file.txt
+
+If you do not wish to overwrite files with the same name, switch to a new branch and run the outputs-push command again.
+Would you like to proceed with the operation, even though it may overwrite files?
+1) Yes
+2) No
+#?
+```
+
+Enter `1` to proceed or `2` to cancel.
+
+If python is available on your machine, this process will also write an index.html file that serves as a sort of directory for all the files at the project's S3 path. You will be able to find the file at `https://washpost.arcpublishing.com/datakit/{repo-name}/index.html`. (If you run into a `boto3` error, it might be because the requirements in requirements.txt file are not installed. See your project's README for details.)
+
+6. Share files with your colleagues. Users will need to be connected to Zscaler to access the uploaded files (this is how we ensure files are only available within the newsroom). Links will follow this format:
+
+`https://washpost.arcpublishing.com/datakit/{repo-name}/{branch}/{file.ext}`

@@ -1,0 +1,44 @@
+{
+  "name": "{{ cookiecutter.project_name }}",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "init": true,
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2.14.0": {},
+    "ghcr.io/devcontainers/features/go:1.3.2": {}
+  },
+  "remoteUser": "devpod-user",
+  "updateRemoteUserUID": true,
+  "runArgs": [
+    "--privileged"
+  ],
+  "mounts": [
+    "source={{ cookiecutter.project_name }}-docker-lib,target=/var/lib/docker,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+        "python.terminal.activateEnvironment": true,
+        "ruff.nativeServer": true
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "ms-toolsai.jupyter",
+        "snakemake.snakemake-lang",
+        "tfehlmann.snakefmt",
+        "quarto.quarto"
+      ]
+    }
+  },
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb"
+  },
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+  "postStartCommand": "bash .devcontainer/postStart.sh"
+}

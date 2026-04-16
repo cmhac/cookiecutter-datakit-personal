@@ -1,0 +1,26 @@
+repos:
+  # Run linting and formatting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # Run type checking
+  - repo: local
+    hooks:
+      - id: ty
+        name: uv run ty check
+        entry: uv run ty check .
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  # Run copy/paste detector
+  - repo: local
+    hooks:
+      - id: cpd
+        name: Copy/Paste Detector
+        language: system
+        entry: pmd cpd --minimum-tokens 50 --language python -d scripts --exclude scripts/logs

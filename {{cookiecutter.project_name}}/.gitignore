@@ -1,0 +1,9 @@
+*.vim
+.DS_Store
+
+.snakemake
+__pycache__
+.env
+*.egg-info
+
+GITINGEST.md
