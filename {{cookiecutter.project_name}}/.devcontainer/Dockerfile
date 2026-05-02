@@ -2,9 +2,8 @@
 FROM mcr.microsoft.com/devcontainers/base:debian-12
 
 ARG PMD_VERSION="7.20.0"
-ARG GO_VERSION="1.25.7"
 
-ENV PATH="/usr/local/go/bin:/usr/local/bin:/opt/uv-python/current/bin:${PATH}"
+ENV PATH="/usr/local/bin:/opt/uv-python/current/bin:${PATH}"
 ENV UV_PYTHON_INSTALL_DIR="/opt/uv-python"
 
 USER root
@@ -23,20 +22,6 @@ RUN set -eux; \
     unzip \
     ; \
   rm -rf /var/lib/apt/lists/*
-
-# Install Go from official tarballs (newer than Debian repo).
-RUN set -eux; \
-  arch="$(uname -m)"; \
-  case "${arch}" in \
-    x86_64) go_arch="amd64" ;; \
-    aarch64|arm64) go_arch="arm64" ;; \
-    *) echo "Unsupported architecture for Go: ${arch}" >&2; exit 1 ;; \
-  esac; \
-  curl -fsSLo /tmp/go.tgz "https://go.dev/dl/go${GO_VERSION}.linux-${go_arch}.tar.gz"; \
-  rm -rf /usr/local/go; \
-  tar -C /usr/local -xzf /tmp/go.tgz; \
-  rm /tmp/go.tgz; \
-  /usr/local/go/bin/go version
 
 # Install uv (https://docs.astral.sh/uv/) and ensure Python 3.12 is available.
 RUN set -eux; \
@@ -93,9 +78,4 @@ RUN set -eux; \
   chmod 0440 /etc/sudoers.d/devpod-user; \
   chown -R devpod-user:devpod-user "${UV_PYTHON_INSTALL_DIR}"; \
   chmod -R g+w "${UV_PYTHON_INSTALL_DIR}"
-
-# install subfinder with go
-RUN set -eux; \
-  GOBIN=/usr/local/bin go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-
 USER devpod-user
